@@ -1,8 +1,8 @@
 {
+  "repository": "www.google.com",
   "name": "@heisenberg/nodejs",
   "version": "1.0.1",
   "main": "index.js",
-  "repository": "www.google.com",
   "scripts": {
     "test": "node test.js"
   },
@@ -10,7 +10,12 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@formidable": "^1.1.1",
     "@linclark/pkg": "^1.0.2",
-    "@formidable": "^1.1.1"
+    "bootstrap": "^3.3.7",
+    "express": "^4.15.2",
+    "jquery": "^3.2.1",
+    "node-static": "^0.7.9",
+    "sleep": "^5.1.1"
   }
 }
