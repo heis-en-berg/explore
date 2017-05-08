@@ -25,7 +25,7 @@ with tf.Session() as sess:
     # Sort to show labels of first prediction in order of confidence
     top_k = predictions[0].argsort()[-len(predictions[0]):][::-1]
     f = open('./tf_files/result.txt', 'w')
-    f.write("%s" % label_lines[len(predictions[0])-1])
+    f.write("%s" % label_lines[top_k[0]])
     f.close()
 
     for node_id in top_k:

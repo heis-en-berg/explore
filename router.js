@@ -2,8 +2,11 @@ path = require('path');
 
 exports.route = function(handle, pathname, response, request){
 	console.log('About to route to a request for '+ pathname);
+	if(pathname == '/'){
+		pathname = '/looks.html'
+	}
 	if(path.extname(pathname) === '.html' || path.extname(pathname) === '.jpg'){
-		handle['/loadImages'](response,request,pathname);
+		handle['/loadStaticFile'](response,request,pathname);
 	}
 	else if(typeof handle[pathname] === 'function'){
 		handle[pathname](response, request, pathname);

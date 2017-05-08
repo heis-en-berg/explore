@@ -2,18 +2,12 @@ var querystring = require('querystring'),
 	fs = require('fs'),
 	formidable = require('/usr/local/lib/node_modules/formidable'),
 	static = require( 'node-static' ),
-	spawn = require('child_process').spawn;
+	execSync = require('child_process').execSync;
 ;
 
 var fileServer = new static.Server('./public');
 
-function start(response,request){
-	request.addListener('end', function () {
-		fileServer.serveFile("looks.html", 500, {}, request, response);
-    }).resume();
-}
-
-function loadImages(response,request, pathname){
+function loadStaticFile(response,request, pathname){
 	request.addListener('end', function () {
 		fileServer.serveFile(pathname, 500, {}, request, response);
     }).resume();
@@ -37,8 +31,10 @@ function upload(response, request){
 			}
 			});
 			response.writeHead(200, {"Content-type": "text/html"});
-			response.write("Received image : <br/>");
-			response.write("<img src='/show' />");
+			//response.write('<br></br>'+'<div align="center">'+'<h1>Please wait...</h1>'+'</div>');
+			processImage();
+			product = fs.readFileSync('./tf_files/result.txt', 'utf8');
+			response.write('<br></br>'+'<div align="center">'+'<h1>You searched for '+product+'</h1>'+'</div>');
 			response.end();
 		}
 	});
@@ -122,31 +118,15 @@ function foodUpload(response,request){
     }).resume();
 }
 
-function show(response){
-	console.log("Request handler show() was called.");
+function processImage(){
+	console.log("Request handler processImage() was called.");
 	fs.readFileSync('category.txt', 'utf8');
-	spawn('python3.5',['./tf_files/label_image.py','/tmp/test.jpg']);
-	console.log(fs.readFileSync('./tf_files/result.txt', 'utf8'));
-	/*response.writeHead(200, {"Content-type" : "text/plain"});
-	response.write(fs.readFileSync('./tf_files/result.txt', 'utf8'));
-	response.end();*/
-	/*fs.readFile("/tmp/test.jpg", "binary", function(error, file){
-		if(error){
-			response.writeHead(500, {"Content-type" : "text/plain"});
-			response.write("error"+"\n");
-			response.end();
-		} else{
-			response.writeHead(200, {"Content-type" : "text/plain"});
-			response.write(file, "binary");
-			response.end();
-		}
-	});*/
+	execSync('python3.5 ./tf_files/label_image.py /tmp/test.jpg');
+	console.log('User searched for ' + fs.readFileSync('./tf_files/result.txt', 'utf8'));
 }
 
-exports.start = start;
 exports.upload = upload;
-exports.show = show;
-exports.loadImages =loadImages;
+exports.loadStaticFile=loadStaticFile;
 exports.foodUpload=foodUpload;
 exports.booksUpload=booksUpload;
 exports.electronicsUpload=electronicsUpload;

@@ -3,12 +3,10 @@ var router = require('./router');
 var requestHandlers = require('./requestHandlers');
 
 var handle = {};
-handle["/"] = requestHandlers.start;
-handle["/start"] = requestHandlers.start;
 handle["/upload"] = requestHandlers.upload;
-handle["/show"] = requestHandlers.show;
-handle["/loadImages"] = requestHandlers.loadImages;
+handle["/loadStaticFile"] = requestHandlers.loadStaticFile;
 handle["/lifeStyleUpload"] = requestHandlers.lifeStyleUpload;
+handle["/"] = requestHandlers.loadStaticFile;
 handle["/electronicsUpload"] = requestHandlers.electronicsUpload;
 handle["/booksUpload"] = requestHandlers.booksUpload;
 handle["/foodUpload"] = requestHandlers.foodUpload;
