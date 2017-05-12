@@ -10,5 +10,7 @@ handle["/"] = requestHandlers.loadStaticFile;
 handle["/electronicsUpload"] = requestHandlers.electronicsUpload;
 handle["/booksUpload"] = requestHandlers.booksUpload;
 handle["/foodUpload"] = requestHandlers.foodUpload;
+handle["/flipkart"] = requestHandlers.redirectFlipkart;
+handle["/amazon"] = requestHandlers.redirectAmazon;
 
 server.start(router.route, handle);

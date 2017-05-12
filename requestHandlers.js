@@ -30,12 +30,10 @@ function upload(response, request){
 				fs.rename(files.upload.path, "/tmp/test.jpg");
 			}
 			});
-			response.writeHead(200, {"Content-type": "text/html"});
-			//response.write('<br></br>'+'<div align="center">'+'<h1>Please wait...</h1>'+'</div>');
 			processImage();
-			product = fs.readFileSync('./tf_files/result.txt', 'utf8');
-			response.write('<br></br>'+'<div align="center">'+'<h1>You searched for '+product+'</h1>'+'</div>');
-			response.end();
+			request.addListener('end', function () {
+			fileServer.serveFile("showOptions.html", 500, {}, request, response);
+		    }).resume();
 		}
 	});
 }
@@ -57,8 +55,6 @@ function lifeStyleUpload(response,request){
 	request.addListener('end', function () {
 		fileServer.serveFile("upload.html", 500, {}, request, response);
     }).resume();
-    //response.end();
- 	//show(response);
 }
 
 function electronicsUpload(response,request){
@@ -120,9 +116,25 @@ function foodUpload(response,request){
 
 function processImage(){
 	console.log("Request handler processImage() was called.");
-	fs.readFileSync('category.txt', 'utf8');
-	execSync('python3.5 ./tf_files/label_image.py /tmp/test.jpg');
+	var category = fs.readFileSync('category.txt', 'utf8');
+	const cmd = 'python3.5 ./tf_files/label_image.py /tmp/test.jpg'
+	execSync(cmd);
 	console.log('User searched for ' + fs.readFileSync('./tf_files/result.txt', 'utf8'));
+}
+
+function redirectFlipkart(response){
+	product = fs.readFileSync('./tf_files/result.txt', 'utf8');
+	var link = "http://www.flipkart.com/search?q=" + product + "&otracker=start";
+	console.log(link);
+	response.writeHead(302, {Location: link});
+	response.end();
+}
+
+function redirectAmazon(response){
+	product = fs.readFileSync('./tf_files/result.txt', 'utf8');
+	var link = "http://www.amazon.in/s/ref=nb_sb_noss?url=search-alias%3Daps&field-keywords=" + product;
+	response.writeHead(302, {Location: link});
+	response.end();
 }
 
 exports.upload = upload;
@@ -131,3 +143,5 @@ exports.foodUpload=foodUpload;
 exports.booksUpload=booksUpload;
 exports.electronicsUpload=electronicsUpload;
 exports.lifeStyleUpload=lifeStyleUpload;
+exports.redirectFlipkart=redirectFlipkart;
+exports.redirectAmazon=redirectAmazon;
